@@ -1,17 +1,30 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Category;
+use App\Livewire\ProductCategory;
+use App\Models\Product;
+
+Route::get('/', function () {
+    $categories = Category::with('products')->get();
+    return view('welcome', compact('categories'));
+});
 
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
+Route::middleware(['auth'])->group(function () {
     
-])->group(function () {
+    Route::get('reset-password/{token}', [HomeController::class, 'resetPassword'])
+        ->name('password.reset');
+
+    Route::post('reset-password/{token}', [HomeController::class, 'updatePassword'])
+        ->name('password.update');
+
+    Route::post('forgot-password', [HomeController::class, 'emailResetPassword'])
+        ->name('password.email');
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -20,4 +33,28 @@ Route::middleware([
     Route::get('/aquarium',App\Livewire\Aquarium\Index::class)->name('aquarium.index');
     Route::get('/perawatan',App\Livewire\Perawatan\Index::class)->name('perawatan.index');
     Route::get('/aksesoris',App\Livewire\Aksesoris\Index::class)->name('aksesoris.index');
+    Route::get('/jenis/{categoryJenis}', App\Livewire\Jenis\Index::class);
+    
+    // Route::get('/product/{id}', App\Livewire\Jenis\Index::class)->name('product.show'); 
+    // INII SALAH karena kan kalau mau ngembaliin views tuh path nya bukan ke App\Livewire.... tapi langsung ke return view (secara default udh kesini)
+    Route::get('/product/jenis/{id}', function ($id) {
+        $product = Product::with('category')->findOrFail($id);
+        return view('livewire.jenis.show', compact('product'));
+    })->name('jenis.show');
+    
+    Route::get('/product/aquarium/{id}', function ($id) {
+        $product = Product::with('category')->findOrFail($id);
+        return view('livewire.aquarium.show', compact('product'));
+    })->name('aquarium.show');
+
+    Route::get('/product/perawatan/{id}', function ($id) {
+        $product = Product::with('category')->findOrFail($id);
+        return view('livewire.perawatan.show', compact('product'));
+    })->name('perawatan.show');
+
+    Route::get('/product/aksesoris/{id}', function ($id) {
+        $product = Product::with('category')->findOrFail($id);
+        return view('livewire.aksesoris.show', compact('product'));
+    })->name('aksesoris.show');
 });
+

@@ -44,7 +44,6 @@
     </nav>
     <!-- Hero Section -->
     <section class="relative w-full h-[500px]">
-    <!-- Background Full supaya gak ada garis aneh -->
     <div class="absolute inset-0 bg-black"></div>
         <div class="absolute top-0 w-full h-[65%] flex flex-col justify-center items-start pl-64 mb-4 mt-4">
             <h1 class="text-3xl font-bold text-white">WELCOME TO</h1>

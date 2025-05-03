@@ -1,12 +1,11 @@
-<div class="bg-black text-white px-4 py-2 flex items-center justify-between">
+<div x-data="{ open: false }" class="bg-black text-white px-4 py-2 flex items-center justify-between w-full">
     <!-- Menu Sidebar Button -->
     <button @click="open = !open" class="text-white text-xl">
         ☰
     </button>
 
-    <div x-data="{ open: false }">
     <!-- Sidebar -->
-    <div x-show="open" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-40">
+    <div x-show="open" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-40" @click.away="open = false">
         <div class="w-64 h-full bg-black text-white p-4">
             <h2 class="text-xl font-bold">Dashboard</h2>
             <ul class="mt-4">
@@ -16,8 +15,6 @@
             </ul>
         </div>
     </div>
-</div>
-
 
     <!-- Navbar Links -->
     <div class="flex space-x-6">

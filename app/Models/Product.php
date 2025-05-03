@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Product;
 use App\Models\Review;
 use App\Models\Category;
 use App\Models\OrderItem;
@@ -13,7 +14,8 @@ class Product extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
-    protected $fillable = ['seller_id', 'name', 'category_id', 'price', 'stock', 'description', 'image'];
+    
+    protected $fillable = ['name', 'category_id', 'price', 'stock', 'description', 'image'];
 
     public function user()
     {
@@ -30,8 +32,11 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function order_item()
+    public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    
+
 }

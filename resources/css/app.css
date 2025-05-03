@@ -52,3 +52,28 @@
   transform: translateY(0);
 }
 
+.wave {
+  position: absolute;
+  bottom: 0;
+  width: 300%;
+  height: 120px;
+  animation: waveMove 8s linear infinite;
+  transform: translateY(1px); /* ini opsional buat ngilangin garis putih tipis */
+}
+
+@keyframes waveMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.3%); /* Sesuaikan dengan width */
+  }
+}
+
+.zoom {
+  transition: transform .2s;
+}
+
+.zoom:hover {
+  transform: scale(1.05);
+}
