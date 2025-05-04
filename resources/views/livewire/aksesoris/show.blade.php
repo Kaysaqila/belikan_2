@@ -2,9 +2,8 @@
 <div class="flex flex-col md:flex-row gap-8 p-8 justify-center items-center mt-8">
     <!-- Gambar -->
     <div class="w-full md:w-1/2 max-w-md">
-    <div class="relative rounded-lg overflow-hidden shadow-lg p-2 bg-white">
-        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-             class="w-full object-cover rounded-md">
+    <div class="w-120 h-80 bg-gray-100 flex items-center justify-center overflow-hidden rounded-lg shadow-lg p-2 bg-white">
+        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
     </div>
     </div>
 

@@ -26,7 +26,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('password.email');
 
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $topProducts = Product::with('category')->orderBy('stock', 'asc')->take(8)->get();
+        return view('dashboard', compact('topProducts'));
     })->name('dashboard');
 
     Route::get('/jenis',App\Livewire\Jenis\Index::class)->name('jenis.index');
