@@ -43,17 +43,17 @@ Route::middleware(['auth'])->group(function () {
         return view('livewire.jenis.show', compact('product'));
     })->name('jenis.show');
     
-    Route::get('/product/aquarium/{id}', function ($id) {
+    Route::get('/aquarium/{id}', function ($id) {
         $product = Product::with('category')->findOrFail($id);
         return view('livewire.aquarium.show', compact('product'));
     })->name('aquarium.show');
 
-    Route::get('/product/perawatan/{id}', function ($id) {
+    Route::get('/perawatan/{id}', function ($id) {
         $product = Product::with('category')->findOrFail($id);
         return view('livewire.perawatan.show', compact('product'));
     })->name('perawatan.show');
 
-    Route::get('/product/aksesoris/{id}', function ($id) {
+    Route::get('/aksesoris/{id}', function ($id) {
         $product = Product::with('category')->findOrFail($id);
         return view('livewire.aksesoris.show', compact('product'));
     })->name('aksesoris.show');

@@ -32,6 +32,11 @@
             <!-- Right side dropdowns -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <!-- ... (tidak diubah, kecuali hover) -->
+                <form>
+                    <input type="text" name="cari" placeholder="Search"
+                        class="bg-transparent border border-white rounded-full px-4 py-1 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400 w-36 sm:w-48" />
+                </form>
+                
                 <div class="ml-3 relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">

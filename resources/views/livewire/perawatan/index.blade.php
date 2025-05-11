@@ -43,6 +43,18 @@
     </div>
 </section>
 
+<form method="GET" id="sortForm">
+    <div class="mb-3">
+        <select name="sort" id="sort"
+            class="bg-black text-white uppercase px-4 py-2 rounded cursor-pointer ml-20"
+            onchange="document.getElementById('sortForm').submit();">
+            <option value="">SORT BY:</option>
+            <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Harga Terendah</option>
+            <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Harga Tertinggi</option>
+        </select>
+    </div>
+</form>
+
 <div class="grid grid-cols-4 gap-8 m-4 p-4">
     @forelse($products as $product)
         <a href="{{ route('perawatan.show', $product->id) }}" class="block">
