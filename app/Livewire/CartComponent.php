@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class CartComponent extends Component
 {
     public $cartItems;
+    public $total = 0;
 
     public function mount()
     {
@@ -21,6 +22,11 @@ class CartComponent extends Component
         $this->cartItems = Cart::with('product')
             ->where('user_id', Auth::id())
             ->get();
+
+        // Hitung total dari semua item
+        $this->total = $this->cartItems->sum(function ($item) {
+            return $item->product->price * $item->quantity;
+        });
     }
 
     public function addToCart($productId)
@@ -54,4 +60,9 @@ class CartComponent extends Component
     {
         return view('livewire.cart');
     }
+
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class);
+    // }
 }

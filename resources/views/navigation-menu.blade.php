@@ -36,7 +36,15 @@
                     <input type="text" name="cari" placeholder="Search"
                         class="bg-transparent border border-white rounded-full px-4 py-1 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400 w-36 sm:w-48" />
                 </form>
-                
+
+                <div class="ml-3 relative">
+                    <a href="{{ route('cart.index') }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm rounded-md text-white hover:text-yellow-400 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3z"/>
+                        </svg>
+                    </a>
+                </div>
+
                 <div class="ml-3 relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">

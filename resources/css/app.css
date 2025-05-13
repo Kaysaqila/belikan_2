@@ -69,3 +69,94 @@
     transform: translateX(-33.3%); /* Sesuaikan dengan width */
   }
 }
+
+.gambir {
+  position: relative;
+  height: 450px;
+  overflow: hidden;
+}
+
+.image-scroll {
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Sembunyikan scrollbar vertikal */
+.image-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.image-scroll {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none; /* Supaya gambar bisa di-scroll lewat bawah */
+}
+
+.scroll-wrapper {
+  overflow-x: auto;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  pointer-events: auto; /* Aktifkan interaksi untuk elemen dalam scroll-wrapper */
+}
+
+.scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.scroll-wrapper {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.overlay-text {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparan hitam */
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+li.circle-checkmark {
+  position: relative;
+  padding-left: 40px; /* Supaya ada ruang buat lingkaran dan checkmark */
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+li.circle-checkmark::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 27px;
+  height: 27px;
+  background-color: #3897F0;
+  border-radius: 50%;
+}
+
+li.circle-checkmark::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 9px;
+  height: 15px;
+  border: solid #000000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+

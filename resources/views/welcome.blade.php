@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Belikan</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            AOS.init({
+                duration: 500,
+            });
+        });
+    </script>
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
@@ -15,6 +24,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link rel="icon" href="{{ asset('images/icon.png') }}">
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-white">
 
@@ -44,35 +54,60 @@
     </nav>
     <!-- Hero Section -->
     <section class="relative w-full h-[500px]">
-    <div class="absolute inset-0 bg-black"></div>
-        <div class="absolute top-0 w-full h-[65%] flex flex-col justify-center items-start pl-64 mb-4 mt-4">
-            <h1 class="text-3xl font-bold text-white">WELCOME TO</h1>
-            <img src="{{ asset('images/logo.png') }}" alt="Belikan Logo" class="items-center h-32">
-        </div>
-    <div class="absolute top-3 left-[70%] transform -translate-x-1/2 z-10">
-        <img src="{{ asset('images/cupangk.png') }}" alt="Cupang" class="h-[550px] w-auto object-cover">
-    </div>
-    <!-- Bagian Bawah (Ekor) dengan Gradient biar smooth -->
-    <div class="absolute bottom-0 left-0 w-full h-[15%] bg-gradient-to-t from-[#0b1b2f] to-black"></div>
-</section>
+        <div class="absolute inset-0 bg-black"></div>
+            <div class="absolute top-0 w-full h-[65%] flex flex-col justify-center items-start pl-64 mb-4 mt-4" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="200">
+                <h1 class="text-3xl font-bold text-white">WELCOME TO</h1>
+                <img src="{{ asset('images/logo.png') }}" alt="Belikan Logo" class="items-center h-32">
+            </div>
+            <div class="absolute top-3 left-[60%] transform -translate-x-1/2 z-10 animated-element" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <img src="{{ asset('images/cupangk.png') }}" alt="Cupang" class="h-[550px] w-auto object-cover">
+            </div>
+        <!-- Bagian Bawah (Ekor) dengan Gradient biar smooth -->
+        <div class="absolute bottom-0 left-0 w-full h-[50%] bg-gradient-to-t from-[#0b1b2f] to-black"></div>
+    </section>
 
 
     <!-- Gallery Section -->
-    <section class="grid grid-cols-3 gap-4 px-10 py-6 bg-[#0b1b2f]">
-        <img src="fish1.jpg" alt="Fish 1" class="w-full h-40 object-cover rounded-lg">
-        <img src="fish2.jpg" alt="Fish 2" class="w-full h-40 object-cover rounded-lg">
-        <img src="fish3.jpg" alt="Fish 3" class="w-full h-40 object-cover rounded-lg">
-    </section>
-
-    <!-- Large Image -->
-    <section class="flex justify-center bg-[#0b1b2f] py-8">
-        <img src="large-fish.jpg" alt="Large Fish" class="w-2/3 rounded-lg">
+   <section class="py-10 bg-gradient-to-t from-[#0b1b2f] to-[#0b1b2f]">
+    <div class="max-w-screen-lg mx-auto">
+        <div class="grid grid-cols-3 gap-x-6 justify-items-center" data-aos="fade-up" data-aos-anchor-placement="center-bottom">
+            <img src="{{ asset('images/buntal_landing.jpg') }}" alt="Fish 1" class="w-64 h-60 object-cover">
+            <img src="{{ asset('images/singa_landing.jpg') }}" alt="Fish 2" class="w-64 h-60 object-cover">
+            <img src="{{ asset('images/nemo_landing.jpg') }}" alt="Fish 3" class="w-64 h-60 object-cover">
+        </div>
+        <div>
+            <div class="w-4/5 mx-auto p-6 mt-40 rounded-lg text-2xl text-left" data-aos="fade-up" data-aos-anchor-placement="center-bottom">
+            <p>Sejak 2023, BELIKAN hadir buat kamu yang cari ikan hias premium. Dari cupang legendaris, koi keren, sampai ikan laut eksotis, semua ada! <br> Kami pastikan ikan sehat, pengiriman aman, dan pelayanan ramah biar kamu happy peliharaannya. <br>Yuk, upgrade akuarium kamu bareng BELIKAN!</p>
+            </div>
+        </div>
+    </div>
     </section>
 
     <!-- Info Section -->
-    <section class="bg-gray-800 text-center p-6">
-        <div class="w-2/3 mx-auto bg-gray-700 p-6 rounded-lg">
-            <p>lama lama</p>
+    <section class="py-10 bg-gradient-to-t from-[#050D1A] to-[#0b1b2f] text-center">
+       <div class="grid grid-cols-2 w-3/4 mx-auto rounded-lg gap-x-6 items-center">
+            <img src="{{ asset('images/landing.jpg') }}" alt="Fish 1" class="w-[50%] h-[65%] object-cover m-auto" data-aos="zoom-out-right" data-aos-anchor-placement="center-bottom">
+            <div>
+                <ul class="text-2xl m-auto text-left space-y-8" data-aos="zoom-out-left" data-aos-anchor-placement="center-bottom">
+                    <li class="circle-checkmark">Ikan sehat dan bebas penyakit</li>
+                    <li class="circle-checkmark">Garansi pengiriman aman</li>
+                    <li class="circle-checkmark">Koleksi ikan terlengkap</li>
+                    <li class="circle-checkmark">Layanan 24/7</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-10 bg-gradient-to-t from-[#0b1b2f] to-[#050D1A] text-center">
+       <div class="w-3/4 mx-auto rounded-lg gap-x-6 items-center">
+            <div>
+                <div class="text-5xl mb-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                    <p>Find Your Perfect Fish !</p>
+                </div>
+                <div class="text-lg" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="200">
+                    <p>Make a splash with your new aquatic friend</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -125,8 +160,5 @@
             </p>
         </div>
     </footer>
-
 </body>
 </html>
-
-
