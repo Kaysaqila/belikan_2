@@ -31,13 +31,22 @@ class CartComponent extends Component
 
     public function addToCart($productId)
     {
+        $product = Product::findOrFail($productId);
+
+        if ($product->stock < 1) {
+            // Bisa kasih notifikasi Livewire toast atau return
+            return;
+        }
+
         $cartItem = Cart::where('user_id', Auth::id())
             ->where('product_id', $productId)
             ->first();
 
         if ($cartItem) {
-            $cartItem->quantity += 1;
-            $cartItem->save();
+            if ($cartItem->quantity < $product->stock) {
+                $cartItem->quantity++;
+                $cartItem->save();
+            }
         } else {
             Cart::create([
                 'user_id' => Auth::id(),
@@ -50,6 +59,7 @@ class CartComponent extends Component
         $this->fetchCart();
     }
 
+
     public function removeFromCart($cartId)
     {
         Cart::where('id', $cartId)->delete();
@@ -61,8 +71,25 @@ class CartComponent extends Component
         return view('livewire.cart');
     }
 
-    // public function product()
-    // {
-    //     return $this->belongsTo(Product::class);
-    // }
+    public function incrementQuantity($cartId)
+    {
+        $cartItem = Cart::with('product')->find($cartId);
+
+        if ($cartItem && $cartItem->quantity < $cartItem->product->stock) {
+            $cartItem->quantity++;
+            $cartItem->save();
+            $this->fetchCart();
+        }
+    }
+
+    public function decrementQuantity($cartId)
+    {
+        $cartItem = Cart::find($cartId);
+        if ($cartItem && $cartItem->quantity > 1) {
+            $cartItem->quantity--;
+            $cartItem->save();
+            $this->fetchCart();
+        }
+    }
+
 }

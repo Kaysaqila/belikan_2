@@ -25,24 +25,7 @@
 </div>
 
 <!-- Card Jumlah Beli -->
-<div class="w-full lg:w-1/2 bg-white p-4 rounded-lg shadow-md border">
-    <h3 class="text-lg font-bold mb-2">Jumlah Beli</h3>
-    <p class="text-gray-600 mb-2">Stok Tersedia: {{ $product->stock }}</p>
-
-    <div class="flex items-center gap-2 mb-4">
-        <button class="px-3 py-1 bg-gray-200 rounded text-lg">-</button>
-        <span class="text-lg font-semibold">2</span>
-        <button class="px-3 py-1 bg-gray-200 rounded text-lg">+</button>
-    </div>
-
-    <p class="font-bold text-xl text-gray-800 mb-4">Subtotal: Rp{{ number_format($product->price * 2, 0, ',', '.') }}</p>
-
-    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mb-2">
-        + Keranjang
-    </button>
-    <button class="w-full border border-blue-600 text-blue-600 hover:bg-blue-100 font-semibold py-2 px-4 rounded">
-        Beli Sekarang
-    </button>
-</div>
+    <livewire:jenis.show-jenis :id="$product->id" />
+    
 </div>
 </x-app-layout>

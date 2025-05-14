@@ -3,7 +3,7 @@
     <!-- Tabel Keranjang -->
     <div class="px-6 mt-6">
         <div class="grid grid-cols-5 font-semibold bg-[#002060] text-white rounded-t p-3">
-            <div class="col-span-2">Produk</div>
+            <div class="col-span-2 pl-32">Produk</div>
             <div>Harga Satuan</div>
             <div>Kuantitas</div>
             <div>Total</div>
@@ -14,7 +14,8 @@
                 <!-- Gambar dan checkbox -->
                 <div class="col-span-2 flex items-center space-x-4">
                     <input type="checkbox" class="w-4 h-4" />
-                    <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="w-20 h-20 object-cover" />
+                    <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="w-20 h-20 object-cover" />
+                    <span class="font-medium text-gray-800">{{ $item->product->name }}</span>
                 </div>
 
                 <!-- Harga -->
