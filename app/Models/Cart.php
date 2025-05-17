@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Cart extends Model
 {
-    /** @use HasFactory<\Database\Factories\CartFactory> */
     use HasFactory;
+
     protected $fillable = ['user_id', 'product_id', 'quantity', 'added_at'];
-    public $timestamps = false; //udh ada added_at
+    public $timestamps = false; // karena pakai added_at
+
     public function user()
     {
         return $this->belongsTo(User::class);

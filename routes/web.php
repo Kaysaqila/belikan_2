@@ -40,7 +40,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/aksesoris',App\Livewire\Aksesoris\Index::class)->name('aksesoris.index');
     Route::get('/perawatan',App\Livewire\Perawatan\Index::class)->name('perawatan.index');
     Route::get('/cart', App\Livewire\CartComponent::class)->name('cart.index');
-    Route::post('/cart', [CartComponent::class, 'add'])->name('cart.add');
     Route::get('/jenis/{categoryJenis}', App\Livewire\Jenis\Index::class);
     
     // Route::get('/product/{id}', App\Livewire\Jenis\Index::class)->name('product.show'); 
