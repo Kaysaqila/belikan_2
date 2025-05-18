@@ -13,7 +13,7 @@
                 <!-- Checkbox + Gambar + Nama -->
                 <div class="flex items-center col-span-2 space-x-4">
                     <input type="checkbox" 
-                            wire:model="selectedItems" 
+                            wire:model.live="selectedItems" 
                             value="{{ $item->id }}" 
                             class="checkbox-item" />
                     <img src="{{ asset('storage/' . $item->product->image) }}" wire:ignore alt="{{ $item->product->name }}" class="w-20 h-20 object-cover" />
@@ -56,7 +56,7 @@
 
         <div class="flex justify-between items-center border-t pt-4">
             <label class="flex items-center space-x-2">
-                <input type="checkbox" wire:model="selectAll" class="w-4 h-4" />
+                <input type="checkbox" wire:model.live="selectAll" class="w-4 h-4" />
                 <span>Pilih Semua</span>
             </label>
             <div class="flex items-center space-x-4">
