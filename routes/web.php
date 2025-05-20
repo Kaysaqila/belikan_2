@@ -6,6 +6,7 @@ use App\Livewire\ProductCategory;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use App\Livewire\CartComponent;
+use App\Livewire\CheckoutComponent;
 use App\Livewire\Jenis\ShowJenis;
 
 Route::get('/', function () {
@@ -40,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/aksesoris',App\Livewire\Aksesoris\Index::class)->name('aksesoris.index');
     Route::get('/perawatan',App\Livewire\Perawatan\Index::class)->name('perawatan.index');
     Route::get('/cart', App\Livewire\CartComponent::class)->name('cart.index');
+    Route::get('/checkout', CheckoutComponent::class)->name('checkout');
     Route::get('/jenis/{categoryJenis}', App\Livewire\Jenis\Index::class);
     
     // Route::get('/product/{id}', App\Livewire\Jenis\Index::class)->name('product.show'); 
