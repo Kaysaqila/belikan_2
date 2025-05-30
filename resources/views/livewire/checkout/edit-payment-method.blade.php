@@ -15,7 +15,7 @@
         </ul>
 
         <div class="flex justify-between mt-6">
-            <button wire:click="closeModal" class="text-gray-500">Nanti</button>
+            <button wire:click="$dispatch('closePaymentModal')" class="text-gray-500">Nanti</button>
 
             <button wire:click="confirmSelection" class="bg-blue-600 text-white px-4 py-2 rounded">
                 OK

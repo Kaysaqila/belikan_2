@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Checkout;
 
 use Livewire\Component;
 use App\Models\Cart;
-use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Auth;
 
 class CheckoutComponent extends Component
@@ -14,35 +13,38 @@ class CheckoutComponent extends Component
     public $voucherCode;
     public $discount = 0;
     public $totalAfterDiscount = 0;
-    public $showEditPayment = false;
+    public bool $showEditPayment = false;
     public $paymentMethod;
 
+    public $userAddress;
+    public $userNumber;
+
     protected $listeners = [
-        'closePaymentModal' => 'closeModal',
-        'paymentMethodUpdated' => 'paymentMethodUpdated'
+        'paymentMethodUpdated' => 'updatePaymentMethod',
+        'closePaymentModal' => 'closePaymentModal',
     ];
 
     public function mount()
     {
+        $user = Auth::user();
+        $this->userAddress = $user->address;
+        $this->userNumber = $user->phone_number;
+
         $selectedCartIds = session('selected_cart_ids', []);
-        $this->selectedProducts = \App\Models\Cart::with('product')
+        $this->selectedProducts = Cart::with('product')
             ->whereIn('id', $selectedCartIds)
-            ->where('user_id', auth()->id())
+            ->where('user_id', $user->id)
             ->get();
 
-        $this->total = $this->selectedProducts->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
-
+        $this->total = $this->selectedProducts->sum(fn ($item) => $item->product->price * $item->quantity);
         $this->voucherCode = session('voucher_code', null);
         $this->discount = session('voucher_discount', 0);
         $this->totalAfterDiscount = $this->total - $this->discount;
-
     }
 
     public function render()
     {
-        return view('livewire.checkout-component');
+        return view('livewire.checkout.checkout-component');
     }
 
     public function openPaymentModal()
@@ -50,19 +52,14 @@ class CheckoutComponent extends Component
         $this->showEditPayment = true;
     }
 
-    public function paymentMethodSelected($method)
-    {
-        $this->paymentMethod = $method;
-        $this->showEditPayment = false;
-    }
-
-    public function closeModal()
+    public function closePaymentModal()
     {
         $this->showEditPayment = false;
     }
 
-    public function paymentMethodUpdated($method)
+    public function updatePaymentMethod($method)
     {
         $this->paymentMethod = $method;
+        $this->showEditPayment = false;
     }
 }

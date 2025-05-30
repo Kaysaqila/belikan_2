@@ -6,7 +6,7 @@ use App\Livewire\ProductCategory;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use App\Livewire\CartComponent;
-use App\Livewire\CheckoutComponent;
+use App\Livewire\Checkout\CheckoutComponent;
 use App\Livewire\Jenis\ShowJenis;
 
 Route::get('/', function () {

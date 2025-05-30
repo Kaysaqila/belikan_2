@@ -3,8 +3,11 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-lg font-bold text-blue-900">📍 Alamat Pengiriman</p>
-                    <p></p>
-                    <p></p>
+                    <p>{{ $userAddress ?? 'Alamat belum tersedia' }}</p>
+                </div>
+                <div>
+                    <p class="text-lg font-bold text-blue-900">📍 Alamat Pengiriman</p>
+                    <p>{{ $userNumber ?? 'Alamat belum tersedia' }}</p>
                 </div>
                 <button class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Ubah</button>
             </div>
@@ -75,8 +78,9 @@
                     @php
                         $showEditPayment = $showEditPayment ?? false;
                     @endphp
-                    @if ($showEditPayment)
-                        @livewire('edit-payment-method')
+                   @if ($showEditPayment)
+                        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            @livewire('checkout.edit-payment-method')
                     @endif
                     </div>
                 </div>

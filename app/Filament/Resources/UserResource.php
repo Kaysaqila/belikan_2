@@ -63,7 +63,7 @@ class UserResource extends Resource
                     ->copyMessage('Email address copied')
                     ->copyMessageDuration(1500),
                 TextColumn::make('phone_number')->toggleable(isToggledHiddenByDefault: true)->sortable(),
-                TextColumn::make('address')->toggleable(isToggledHiddenByDefault: true)->sortable(),
+                TextColumn::make('address')->toggleable()->sortable(),
                 TextColumn::make('created_at')->toggleable()->sortable()->dateTime(),
                 TextColumn::make('updated_at')->toggleable(isToggledHiddenByDefault: true)->sortable()->dateTime(),
             ])
