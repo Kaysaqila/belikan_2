@@ -85,8 +85,19 @@ class CartComponent extends Component
             ->sum(fn($item) => $item->product->price * $item->quantity);
 
         $this->total = $subtotal;
-        $this->totalAfterDiscount = $subtotal - $this->discount;
 
+        if ($this->voucherApplied && $this->voucherCode) {
+            $voucher = $this->availableVouchers[$this->voucherCode] ?? null;
+            if ($voucher) {
+                if ($voucher['type'] === 'fixed') {
+                    $this->discount = min($voucher['value'], $subtotal);
+                } elseif ($voucher['type'] === 'percent') {
+                    $this->discount = ($voucher['value'] / 100) * $subtotal;
+                }
+            }
+        }
+
+        $this->totalAfterDiscount = $subtotal - $this->discount;
         return $subtotal;
     }
 
@@ -126,5 +137,6 @@ class CartComponent extends Component
             'voucher_code' => $code,
             'voucher_discount' => $this->discount
         ]);
+        session()->put('voucher_applied', true);
     }
 }

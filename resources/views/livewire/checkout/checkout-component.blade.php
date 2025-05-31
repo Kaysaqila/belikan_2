@@ -3,13 +3,26 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-lg font-bold text-blue-900">📍 Alamat Pengiriman</p>
-                    <p>{{ $userAddress ?? 'Alamat belum tersedia' }}</p>
+                    <p>{{ $shippingName ?? 'Alamat belum tersedia' }}</p>
                 </div>
                 <div>
                     <p class="text-lg font-bold text-blue-900">📍 Alamat Pengiriman</p>
-                    <p>{{ $userNumber ?? 'Alamat belum tersedia' }}</p>
+                    <p>{{ $shippingAddress ?? 'Alamat belum tersedia' }}</p>
                 </div>
-                <button class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Ubah</button>
+                <div>
+                    <p class="text-lg font-bold text-blue-900">📍 Alamat Pengiriman</p>
+                    <p>{{ $shippingNumber ?? 'Alamat belum tersedia' }}</p>
+                </div>
+                <div>
+                    <button wire:click="openEditAddressModal" class="ml-2 bg-blue-500 px-3 py-2 rounded text-white">Ubah</button>
+                    @php
+                        $showEditAddress = $showEditAddress ?? false;
+                    @endphp
+                   @if ($showEditAddress)
+                        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            @livewire('checkout.edit-alamat-penerima')
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -57,8 +70,20 @@
 
          <div class="mb-4">
             <label class="block font-bold mb-1">🎁 Voucher BELIKAN</label>
-            <input type="text" wire:model="voucher" placeholder="Masukkan Kode" class="p-2 border rounded w-full mb-2">
+            <button wire:click="openVoucher" class="ml-2 bg-blue-500 px-3 py-2 rounded text-white">Masukkan Kode</button>
+
+            @if ($showVoucher)
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    @livewire('checkout.voucher', [], key('voucher-modal'))
+                </div>
+            @endif
         </div>
+        @if ($voucherAppliedInCart)
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Voucher sudah digunakan di halaman cart.</strong>
+                <span class="block sm:inline">Kamu tidak bisa menggunakannya lagi di checkout.</span>
+            </div>
+        @endif
 
         <!-- Catatan dan Pengiriman -->
         <div class="flex gap-2 mb-4">
@@ -71,7 +96,6 @@
             <label class="block font-bold mb-1 text-white">Metode Pembayaran</label>
                 <div>
                     <div class="mb-4">
-                        <span class="block mb-1 font-medium">Metode Pembayaran:</span>
                         <span>{{ strtoupper($paymentMethod ?? 'Belum dipilih') }}</span>
                         <button wire:click="openPaymentModal" class="ml-2 bg-blue-500 px-3 py-2 rounded text-white">Ubah</button>
                     </div>
