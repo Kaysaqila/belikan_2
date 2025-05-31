@@ -11,9 +11,5 @@
         @error('voucherCode')
             <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
         @enderror
-
-        @if ($voucherApplied)
-            <p class="text-green-600 mt-2 text-sm">Voucher <strong>{{ $voucherCode }}</strong> berhasil digunakan! Diskon Rp{{ number_format($discount, 0, ',', '.') }}</p>
-        @endif
     </div>
 </div>

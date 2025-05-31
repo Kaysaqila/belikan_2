@@ -11,16 +11,6 @@ class CartComponent extends Component
     public $selectedItems = [];
     public $selectAll = false;
     public $total = 0;
-    public string $voucherCode = '';
-    public $discount = 0;
-    public $voucherApplied = false;
-    public $totalAfterDiscount = 0;
-
-    private array $availableVouchers = [
-        'HEMAT10' => ['type' => 'fixed', 'value' => 10000],
-        'DISKON20' => ['type' => 'percent', 'value' => 20],
-        '7CHILL' => ['type' => 'percent', 'value' => 50],
-    ];
 
     public function mount()
     {
@@ -80,25 +70,9 @@ class CartComponent extends Component
 
     public function updateTotal()
     {
-        $subtotal = $this->cart
+        $this->total = $this->cart
             ->whereIn('id', $this->selectedItems)
             ->sum(fn($item) => $item->product->price * $item->quantity);
-
-        $this->total = $subtotal;
-
-        if ($this->voucherApplied && $this->voucherCode) {
-            $voucher = $this->availableVouchers[$this->voucherCode] ?? null;
-            if ($voucher) {
-                if ($voucher['type'] === 'fixed') {
-                    $this->discount = min($voucher['value'], $subtotal);
-                } elseif ($voucher['type'] === 'percent') {
-                    $this->discount = ($voucher['value'] / 100) * $subtotal;
-                }
-            }
-        }
-
-        $this->totalAfterDiscount = $subtotal - $this->discount;
-        return $subtotal;
     }
 
     public function startCheckout()
@@ -110,33 +84,5 @@ class CartComponent extends Component
     public function render()
     {
         return view('livewire.cart');
-    }
-
-    public function applyVoucher()
-    {
-        $code = strtoupper($this->voucherCode);
-
-        if (!array_key_exists($code, $this->availableVouchers)) {
-            $this->addError('voucherCode', 'Kode voucher tidak ditemukan.');
-            return;
-        }
-
-        $voucher = $this->availableVouchers[$code];
-        $total = $this->updateTotal();
-
-        if ($voucher['type'] === 'fixed') {
-            $this->discount = min($voucher['value'], $total);
-        } elseif ($voucher['type'] === 'percent') {
-            $this->discount = ($voucher['value'] / 100) * $total;
-        }
-
-        $this->voucherApplied = true;
-        $this->updateTotal();
-
-        session([
-            'voucher_code' => $code,
-            'voucher_discount' => $this->discount
-        ]);
-        session()->put('voucher_applied', true);
     }
 }

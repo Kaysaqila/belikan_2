@@ -7,8 +7,9 @@ use Livewire\Component;
 class Voucher extends Component
 {
     public string $voucherCode = '';
+    public bool $voucherApplied = false;
     public $discount = 0;
-    public $voucherApplied = false;
+    public $total;
 
     private array $availableVouchers = [
         'HEMAT10' => ['type' => 'fixed', 'value' => 10000],
@@ -19,27 +20,25 @@ class Voucher extends Component
     public function applyVoucher()
     {
         $code = strtoupper($this->voucherCode);
-        $total = session('checkout_total', 0); // total sebelum diskon harus di-set dari CheckoutComponent
 
         if (!array_key_exists($code, $this->availableVouchers)) {
-            $this->addError('voucherCode', 'Kode voucher tidak ditemukan.');
+            $this->addError('voucherCode', 'Kode voucher tidak valid.');
+            $this->voucherApplied = false;
             return;
         }
 
         $voucher = $this->availableVouchers[$code];
 
         if ($voucher['type'] === 'fixed') {
-            $this->discount = min($voucher['value'], $total);
+            $this->discount = $voucher['value'];
         } elseif ($voucher['type'] === 'percent') {
-            $this->discount = ($voucher['value'] / 100) * $total;
+            $this->discount = intval($this->total * ($voucher['value'] / 100));
         }
 
-        $this->voucherApplied = true;
+       $this->dispatch('voucherApplied', $this->discount, $code);
 
-        session([
-            'voucher_code' => $code,
-            'voucher_discount' => $this->discount
-        ]);
+        // 🔥 Kirim event ke browser untuk menutup modal
+        $this->dispatch('closeVoucher'); 
     }
 
     public function render()

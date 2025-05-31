@@ -68,22 +68,27 @@
             @endif
         </div>
 
-         <div class="mb-4">
-            <label class="block font-bold mb-1">🎁 Voucher BELIKAN</label>
-            <button wire:click="openVoucher" class="ml-2 bg-blue-500 px-3 py-2 rounded text-white">Masukkan Kode</button>
+        <div class="mb-4 text-white">
+            <label class="block font-bold mb-1">Voucher</label>
+            
+            @if ($voucherCode)
+                <div>
+                    <span class="text-green-400">Voucher "{{ $voucherCode }}" digunakan. Diskon: Rp{{ number_format($discount, 0, ',', '.') }}</span>
+                    <button wire:click="resetVoucher" class="ml-2 bg-red-500 px-2 py-1 rounded">Hapus</button>
+                </div>
+            @else
+                <button wire:click="openVoucher" class="bg-blue-500 px-3 py-2 rounded">Pilih Voucher</button>
+            @endif
 
             @if ($showVoucher)
                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    @livewire('checkout.voucher', [], key('voucher-modal'))
+                    @livewire('checkout.voucher', ['total' => $total])
                 </div>
             @endif
+            @error('voucherCode')
+                <span class="text-red-500">{{ $message }}</span>
+            @enderror
         </div>
-        @if ($voucherAppliedInCart)
-            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <strong class="font-bold">Voucher sudah digunakan di halaman cart.</strong>
-                <span class="block sm:inline">Kamu tidak bisa menggunakannya lagi di checkout.</span>
-            </div>
-        @endif
 
         <!-- Catatan dan Pengiriman -->
         <div class="flex gap-2 mb-4">
@@ -133,13 +138,23 @@
                 <hr class="my-2">
                 <div class="flex justify-between font-bold text-lg">
                     <span>Total Pembayaran</span>
-                    <span class="{{ $discount > 0 ? 'line-through text-red-500' : '' }}">
-                        Rp{{ number_format($total + ($shippingCost ?? 2000) + ($serviceFee ?? 2000), 0, ',', '.') }}
-                    </span>
+                    @if ($discount > 0)
+                        <span class="line-through text-red-500">
+                            Rp{{ number_format($total + ($shippingCost ?? 2000) + ($serviceFee ?? 2000), 0, ',', '.') }}
+                        </span>
+                    @else
+                        <span>
+                            Rp{{ number_format($total + ($shippingCost ?? 2000) + ($serviceFee ?? 2000), 0, ',', '.') }}
+                        </span>
+                    @endif
                 </div>
+
                 @if ($discount > 0)
-                    <div class="flex justify-end font-bold text-green-700 text-xl">
-                        Rp{{ number_format(($total + ($shippingCost ?? 2000) + ($serviceFee ?? 2000)) - $discount, 0, ',', '.') }}
+                    <div class="flex justify-between font-bold text-green-700 text-xl">
+                        <span>Total Setelah Diskon</span>
+                        <span>
+                            Rp{{ number_format(($total + ($shippingCost ?? 2000) + ($serviceFee ?? 2000)) - $discount, 0, ',', '.') }}
+                        </span>
                     </div>
                 @endif
             </div>

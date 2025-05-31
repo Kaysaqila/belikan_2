@@ -45,28 +45,7 @@
     <!-- Voucher dan Total -->
     <div class="bg-gray-200 mt-10 p-4">
         <div class="flex justify-between items-center mb-4">
-            <div class="flex items-center space-x-2 font-semibold">
-                <span>Voucer BELIKAN</span>
-            </div>
-            <input type="text" placeholder="Masukkan Kode" class="border px-2 py-1 rounded" />
-        </div>
-
-        <div class="mt-4">
-            <label class="block font-medium mb-1">Kode Voucher:</label>
-            <div class="flex items-center space-x-2">
-                <input type="text" wire:model="voucherCode" class="border px-2 py-1 rounded" placeholder="Masukkan kode voucher">
-                <button wire:click="applyVoucher" class="bg-blue-600 text-white px-3 py-1 rounded">Gunakan</button>
-            </div>
-            @error('voucherCode') 
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div class="mt-4 text-right">
-           <p>Total: Rp{{ number_format($total, 0, ',', '.') }}</p>
-            @if ($voucherApplied)
-                <p class="text-green-600">Diskon: -Rp{{ number_format($discount, 0, ',', '.') }}</p>
-            @endif
+            <span>Akumulasi Total</span>
         </div>
 
         <div class="flex justify-between items-center border-t pt-4">
@@ -75,7 +54,7 @@
                 <span>Pilih Semua</span>
             </label>
             <div class="flex items-center space-x-4">
-                <span class="font-semibold">Total Bayar: Rp{{ number_format($totalAfterDiscount, 0, ',', '.') }}</span>
+                <span class="font-semibold">Total Bayar: Rp{{ number_format($total, 0, ',', '.') }}</span>
                 <button wire:click="startCheckout"
                         class="bg-[#002060] text-white px-4 py-2 rounded hover:bg-[#001540]">
                     Check Out

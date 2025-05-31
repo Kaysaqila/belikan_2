@@ -19,17 +19,18 @@ class CheckoutComponent extends Component
     public bool $showEditPayment = false;
     public bool $showEditAddress = false;
     public bool $showVoucher = false;
-    public $voucherAppliedInCart = false; // jika voucher udh dipakai di cart
     public $paymentMethod;
+    public $voucherApplied = false; // opsional, kalau mau tandai berhasil atau belum
 
     public $shippingAddress, $shippingNumber, $shippingName;
 
     protected $listeners = [
-        'paymentMethodUpdated' => 'updatePaymentMethod',
+        'paymentMethodUpdated' => 'updatePaymentMethod', //update metode pembayaran
         'closePaymentModal' => 'closePaymentModal',
         'closeEditAddressModal' => 'closeEditAddressModal',
         'closeVoucher' => 'closeVoucher',
-        'addressUpdated' => 'refreshShippingData' // Tambahkan ini
+        'addressUpdated' => 'refreshShippingData',
+        'voucherApplied' => 'handleVoucherApplied', //update harga setelah ada voucher
     ];
 
     public function mount()
@@ -44,16 +45,20 @@ class CheckoutComponent extends Component
         $this->shippingNumber = $shipping?->phone_number ?? $user->phone_number;
         $this->shippingName = $shipping?->name ?? $user->name;
 
-        // Cek apakah di cart sudah ada voucher
-        if (session()->has('voucher_applied')) {
-            $this->voucherAppliedInCart = true;
-        }
-        
         $selectedCartIds = session('selected_cart_ids', []);
         $this->selectedProducts = Cart::with('product')
             ->whereIn('id', $selectedCartIds)
             ->where('user_id', $user->id)
             ->get();
+
+        // Cek apakah isi keranjang berubah
+        $lastCartIds = session('last_cart_ids', []);
+        if ($selectedCartIds !== $lastCartIds) {
+            session()->forget(['voucher_code', 'voucher_discount']); // Hapus voucher
+        }
+
+        // Simpan daftar keranjang terbaru
+        session(['last_cart_ids' => $selectedCartIds]);
 
         $this->total = $this->selectedProducts->sum(fn ($item) => $item->product->price * $item->quantity);
         $this->voucherCode = session('voucher_code', null);
@@ -120,6 +125,28 @@ class CheckoutComponent extends Component
 
         session()->flash('success', 'Pesanan berhasil dibuat!');
         return redirect('/checkout/success');
+    }
+
+    public function handleVoucherApplied($discount, $code)
+    {
+        $this->discount = $discount;
+        $this->voucherCode = $code;
+        $this->totalAfterDiscount = $this->total - $this->discount;
+        $this->voucherApplied = true;
+
+        session([
+            'voucher_code' => $code,
+            'voucher_discount' => $discount
+        ]);
+    }
+
+    public function resetVoucher()
+    {
+        session()->forget(['voucher_code', 'voucher_discount']);
+        $this->voucherCode = null;
+        $this->discount = 0;
+        $this->totalAfterDiscount = $this->total;
+        $this->voucherApplied = false;
     }
 
     public function render()
