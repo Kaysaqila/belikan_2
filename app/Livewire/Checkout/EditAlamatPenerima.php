@@ -41,28 +41,18 @@ class EditAlamatPenerima extends Component
 
         $user = Auth::user();
 
-        // Cari shipping address yang ada (tanpa memperdulikan order_id)
-        $shippingAddress = ShippingAddress::where('user_id', $user->id)
-            ->latest()
-            ->first();
-
-        if ($shippingAddress) {
-            // Update alamat pengiriman yang sudah ada
-            $shippingAddress->update([
-                'recipient_name' => $this->shippingName,
-                'address' => $this->shippingAddress,
-                'phone_number' => $this->shippingNumber,
-            ]);
-        } else {
-            // Buat alamat pengiriman baru TANPA order_id
-            ShippingAddress::create([
+        // Update atau buat alamat default (tanpa order_id)
+        ShippingAddress::updateOrCreate(
+            [
                 'user_id' => $user->id,
+                'order_id' => null // Ini alamat default user
+            ],
+            [
                 'recipient_name' => $this->shippingName,
                 'address' => $this->shippingAddress,
-                'phone_number' => $this->shippingNumber,
-                // Tidak menyertakan order_id
-            ]);
-        }
+                'phone_number' => $this->shippingNumber
+            ]
+        );
 
         $this->dispatch('addressUpdated');
         session()->flash('success', 'Alamat berhasil diperbarui');

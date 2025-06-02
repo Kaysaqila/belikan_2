@@ -19,10 +19,11 @@ class CheckoutComponent extends Component
     public bool $showEditPayment = false;
     public bool $showEditAddress = false;
     public bool $showVoucher = false;
+    public bool $showOpsiKirim = false;
     public $paymentMethod;
     public $voucherApplied = false; // opsional, kalau mau tandai berhasil atau belum
 
-    public $shippingAddress, $shippingNumber, $shippingName;
+    public $shippingAddress, $shippingNumber, $shippingName, $note;
 
     protected $listeners = [
         'paymentMethodUpdated' => 'updatePaymentMethod', //update metode pembayaran
@@ -37,13 +38,15 @@ class CheckoutComponent extends Component
     {
         $user = Auth::user();
 
-        // Cek apakah user sudah punya shipping address
-        $shipping = ShippingAddress::where('user_id', $user->id)->latest()->first();
+        // Ambil alamat default (tanpa order_id)
+        $shipping = ShippingAddress::where('user_id', $user->id)
+            ->whereNull('order_id')
+            ->latest()
+            ->first();
 
-        // Pakai shipping address kalau ada, fallback ke user
         $this->shippingAddress = $shipping?->address ?? $user->address;
         $this->shippingNumber = $shipping?->phone_number ?? $user->phone_number;
-        $this->shippingName = $shipping?->name ?? $user->name;
+        $this->shippingName = $shipping?->recipient_name ?? $user->name;
 
         $selectedCartIds = session('selected_cart_ids', []);
         $this->selectedProducts = Cart::with('product')
@@ -69,11 +72,14 @@ class CheckoutComponent extends Component
     public function refreshShippingData()
     {
         $user = Auth::user();
-        $shipping = ShippingAddress::where('user_id', $user->id)->latest()->first();
+        $shipping = ShippingAddress::where('user_id', $user->id)
+            ->whereNull('order_id') // Hanya ambil alamat default
+            ->latest()
+            ->first();
         
         $this->shippingAddress = $shipping?->address ?? $user->address;
         $this->shippingNumber = $shipping?->phone_number ?? $user->phone_number;
-        $this->shippingName = $shipping?->name ?? $user->name;
+        $this->shippingName = $shipping?->recipient_name ?? $user->name;
     }
 
     public function placeOrder()
@@ -101,24 +107,20 @@ class CheckoutComponent extends Component
             'status' => 'pending',
         ]);
 
-        // Cari atau buat shipping address
-        $shipping = ShippingAddress::where('user_id', Auth::id())
-            ->latest()
+        // Dapatkan alamat default user
+        $defaultAddress = ShippingAddress::where('user_id', Auth::id())
+            ->whereNull('order_id')
             ->first();
 
-        if ($shipping) {
-            // Update dengan order_id
-            $shipping->update(['order_id' => $order->id]);
-        } else {
-            // Buat baru dengan order_id
-            ShippingAddress::create([
-                'order_id' => $order->id,
-                'user_id' => Auth::id(),
-                'recipient_name' => $this->shippingName,
-                'phone_number' => $this->shippingNumber,
-                'address' => $this->shippingAddress,
-            ]);
-        }
+        // Buat alamat spesifik untuk order ini
+        ShippingAddress::create([
+            'order_id' => $order->id, // order_id wajib diisi
+            'user_id' => Auth::id(),
+            'recipient_name' => $defaultAddress ? $defaultAddress->recipient_name : $this->shippingName,
+            'address' => $defaultAddress ? $defaultAddress->address : $this->shippingAddress,
+            'phone_number' => $defaultAddress ? $defaultAddress->phone_number : $this->shippingNumber,
+            'note' => $this->note,
+        ]);
 
         // Hapus item cart
         Cart::whereIn('id', $selectedCartIds)->delete();
@@ -182,6 +184,16 @@ class CheckoutComponent extends Component
     public function closeVoucher()
     {
         $this->showVoucher = false;
+    }
+
+    public function openOpsiKirim() //opsi kirim
+    {
+        $this->showOpsiKirim = true;
+    }
+
+    public function closeOpsiKirim()
+    {
+        $this->showOpsiKirim = false;
     }
 
     public function updatePaymentMethod($method)

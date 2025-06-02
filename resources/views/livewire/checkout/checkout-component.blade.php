@@ -92,7 +92,7 @@
 
         <!-- Catatan dan Pengiriman -->
         <div class="flex gap-2 mb-4">
-            <input type="text" wire:model="note" placeholder="Pesan : Tinggalkan Pesan (opsional)" class="flex-1 p-2 border rounded">
+            <input type="text" wire:model="note" placeholder="Tinggalkan catatan pembelian" class="flex-1 p-2 border rounded">
             <div class="text-sm"></div>
         </div>
 
