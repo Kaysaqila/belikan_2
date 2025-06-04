@@ -20,18 +20,21 @@ class CheckoutComponent extends Component
     public bool $showEditAddress = false;
     public bool $showVoucher = false;
     public bool $showOpsiKirim = false;
+    public $selectedShippingOption = null;
     public $paymentMethod;
     public $voucherApplied = false; // opsional, kalau mau tandai berhasil atau belum
 
     public $shippingAddress, $shippingNumber, $shippingName, $note;
 
     protected $listeners = [
-        'paymentMethodUpdated' => 'updatePaymentMethod', //update metode pembayaran
+        'paymentMethodUpdated' => 'updatePaymentMethod', // update metode pembayaran
+        'shippingOptionUpdated' => 'updateShippingOption', // update opsi kirim
         'closePaymentModal' => 'closePaymentModal',
         'closeEditAddressModal' => 'closeEditAddressModal',
         'closeVoucher' => 'closeVoucher',
+        'closeOpsiKirim' => 'closeOpsiKirim', 
         'addressUpdated' => 'refreshShippingData',
-        'voucherApplied' => 'handleVoucherApplied', //update harga setelah ada voucher
+        'voucherApplied' => 'handleVoucherApplied', // update harga setelah ada voucher
     ];
 
     public function mount()
@@ -151,6 +154,31 @@ class CheckoutComponent extends Component
         $this->voucherApplied = false;
     }
 
+    public function updatePaymentMethod($method)
+    {
+        $this->paymentMethod = $method;
+        $this->showEditPayment = false;
+    }
+
+    public function updateShippingOption($option)
+    {
+        $this->selectedShippingOption = $option;
+        $this->showOpsiKirim = false;
+    }
+
+    public $shippingOptions = [
+        'reguler' => [
+            'label' => 'Reguler',
+            'price' => 15000,
+            'guarantee' => '2-3 hari kerja'
+        ],
+        'hemat' => [
+            'label' => 'Hemat',
+            'price' => 11000,
+            'guarantee' => '3-5 hari kerja'
+        ]
+    ];
+    
     public function render()
     {
         return view('livewire.checkout.checkout-component');
@@ -194,11 +222,5 @@ class CheckoutComponent extends Component
     public function closeOpsiKirim()
     {
         $this->showOpsiKirim = false;
-    }
-
-    public function updatePaymentMethod($method)
-    {
-        $this->paymentMethod = $method;
-        $this->showEditPayment = false;
     }
 }

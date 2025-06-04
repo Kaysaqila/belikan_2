@@ -130,6 +130,73 @@
   font-size: 18px;
 }
 
+.parallax-section {
+    position: relative;
+    height: 400px; /* Atur tinggi sesuai kebutuhan */
+    overflow-x: hidden;
+}
+
+.parallax-container {
+    position: relative;
+    height: 100%;
+    perspective: 1px;
+    overflow: hidden;
+}
+
+.parallax-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    object-fit: cover;
+    transform: translateZ(-1px) scale(1.1); /* Efek parallax */
+}
+
+.content-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    z-index: 1;
+}
+
+.content-overlay h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.content-overlay p {
+    font-size: 1.5rem;
+}
+
+/* sini*/
+.parallax-card-overlay {
+    position: absolute;
+    bottom: 2rem; /* jarak dari bawah */
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    pointer-events: auto;
+}
+
+.scroll-wrapper {
+    overflow-x: auto;
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    pointer-events: auto;
+}
+
+.scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}
+.scroll-wrapper {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 li.circle-checkmark {
   position: relative;
   padding-left: 40px; /* Supaya ada ruang buat lingkaran dan checkmark */
@@ -159,4 +226,3 @@ li.circle-checkmark::after {
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
-
