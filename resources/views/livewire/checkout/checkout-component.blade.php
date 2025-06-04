@@ -185,5 +185,12 @@
         <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             BELI
         </button>
+        <!-- Tombol Checkout -->
+        <div class="mt-6">
+            <button wire:click="placeOrder" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                Beli Sekarang
+            </button>
+        </div>
     </div>
 </div>

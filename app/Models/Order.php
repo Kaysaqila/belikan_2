@@ -7,12 +7,13 @@ use App\Models\Payment;
 use App\Models\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne; // Ensure this is imported
 
 class Order extends Model
 {
-    /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
-    protected $fillable = ['user_id','total_amount','status'];
+
+    protected $fillable = ['user_id', 'total_amount', 'status'];
 
     public function user()
     {
@@ -27,5 +28,10 @@ class Order extends Model
     public function payment()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function shippingAddress(): HasOne
+    {
+        return $this->hasOne(ShippingAddress::class);
     }
 }

@@ -107,6 +107,8 @@ class CheckoutComponent extends Component
             'total_amount' => $total,
             'voucher_code' => $voucherCode,
             'voucher_discount' => $voucherDiscount,
+            'shipping_method' => $this->selectedShippingOption,
+            'payment_method' => $this->paymentMethod,
             'status' => 'pending',
         ]);
 
@@ -129,7 +131,7 @@ class CheckoutComponent extends Component
         Cart::whereIn('id', $selectedCartIds)->delete();
 
         session()->flash('success', 'Pesanan berhasil dibuat!');
-        return redirect('/checkout/success');
+        return redirect()->route('checkout.success');
     }
 
     public function handleVoucherApplied($discount, $code)
@@ -178,7 +180,7 @@ class CheckoutComponent extends Component
             'guarantee' => '3-5 hari kerja'
         ]
     ];
-    
+
     public function render()
     {
         return view('livewire.checkout.checkout-component');
