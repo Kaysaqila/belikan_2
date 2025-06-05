@@ -5,58 +5,73 @@ namespace App\Livewire\Checkout;
 use Livewire\Component;
 use App\Models\ShippingAddress;
 use App\Models\Order;
-use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 
 class EditAlamatPenerima extends Component
 {
-    public $shippingAddress, $shippingNumber, $shippingName;
+    public $shippingAddress, $shippingNumber, $shippingName, $note; // Add note property
     public $orderId;
-    
+
     public function mount()
     {
         $user = Auth::user();
 
-        // data awal form
+        // Initialize form data with user's default address
         $this->shippingAddress = $user->address;
         $this->shippingNumber = $user->phone_number;
         $this->shippingName = $user->name;
 
-        // Ambil order yang belum selesai (contoh)
+        // Get the latest pending order for the user
         $latestOrder = Order::where('user_id', $user->id)
-                            ->where('status', 'pending') // sesuaikan dengan logikamu
+                            ->where('status', 'pending') // Adjust based on your logic
                             ->latest()
                             ->first();
 
-        $this->orderId = $latestOrder?->id; // kalau null, tetap null
+        $this->orderId = $latestOrder?->id; // Keep it null if no order found
+
+        // Load the existing shipping address if available
+        $shipping = ShippingAddress::where('user_id', $user->id)
+            ->where('order_id', null) // Only get the default address
+            ->latest()
+            ->first();
+
+        if ($shipping) {
+            $this->shippingAddress = $shipping->address;
+            $this->shippingNumber = $shipping->phone_number;
+            $this->shippingName = $shipping->recipient_name;
+            $this->note = $shipping->note; // Load the note if it exists
+        }
     }
 
     public function update()
     {
         $this->validate([
-            'shippingName' => 'required|string',
+            'shippingName' => 'required|string|max:255',
             'shippingAddress' => 'required|string|max:255',
             'shippingNumber' => 'required|string|max:20',
+            'note' => 'nullable|string|max:500', // Validate note
         ]);
 
         $user = Auth::user();
 
-        // Update atau buat alamat default (tanpa order_id)
+        // Update or create the default shipping address
         ShippingAddress::updateOrCreate(
             [
                 'user_id' => $user->id,
-                'order_id' => null // Ini alamat default user
+                'order_id' => null // Ensure this is a default address
             ],
             [
                 'recipient_name' => $this->shippingName,
                 'address' => $this->shippingAddress,
-                'phone_number' => $this->shippingNumber
+                'phone_number' => $this->shippingNumber,
+                'note' => $this->note, // Save the note
             ]
         );
 
+        // Dispatch an event to notify that the address has been updated
         $this->dispatch('addressUpdated');
         session()->flash('success', 'Alamat berhasil diperbarui');
-        $this->dispatch('closeEditAddressModal');
+        $this->dispatch('closeEditAddressModal'); // Close the modal
     }
 
     public function render()

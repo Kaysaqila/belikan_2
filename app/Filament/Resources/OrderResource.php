@@ -3,16 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
-
 use App\Models\Order;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
 
 class OrderResource extends Resource
 {
@@ -24,31 +20,39 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                
                 Forms\Components\Card::make()
                     ->schema([
+                        Forms\Components\Select::make('user_id')
+                            ->relationship('user', 'name')
+                            ->label('Customer')
+                            ->required(),
 
-                    Forms\Components\Select::make('user_id')
-                        ->relationship('user', 'name')
-                        ->label('Customer')
-                        ->required(),
+                        Forms\Components\TextInput::make('total_amount')
+                            ->label('Total Amount')
+                            ->numeric()
+                            ->required(),
 
-                    Forms\Components\TextInput::make('total_amount')
-                        ->label('Total Amount')
-                        ->numeric()
-                        ->required(),
+                        Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->options([
+                                'pending' => 'Pending',
+                                'completed' => 'Completed',
+                                'cancelled' => 'Cancelled',
+                            ])
+                            ->default('pending')
+                            ->required(),
 
-                    Forms\Components\Select::make('status')
-                        ->label('Status')
-                        ->options([
-                            'pending' => 'Pending',
-                            'completed' => 'Completed',
-                            'cancelled' => 'Cancelled',
-                        ])
-                        ->default('pending')
-                        ->required(),
-                ]),
-        ]);
+                        Forms\Components\TextInput::make('shipping_method')
+                            ->label('Shipping Method')
+                            ->required()
+                            ->placeholder('Enter shipping method'),
+
+                        Forms\Components\TextInput::make('payment_method')
+                            ->label('Payment Method')
+                            ->required()
+                            ->placeholder('Enter payment method'),
+                    ]),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -69,6 +73,14 @@ class OrderResource extends Resource
                         'completed' => 'success',
                         'cancelled' => 'danger',
                     ]),
+
+                Tables\Columns\TextColumn::make('shipping_method')
+                    ->label('Shipping Method')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->label('Payment Method')
+                    ->sortable(),
             ])
             ->filters([])
             ->actions([
@@ -79,7 +91,6 @@ class OrderResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-
 
     public static function getPages(): array
     {

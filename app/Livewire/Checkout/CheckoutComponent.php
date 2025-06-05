@@ -76,13 +76,14 @@ class CheckoutComponent extends Component
     {
         $user = Auth::user();
         $shipping = ShippingAddress::where('user_id', $user->id)
-            ->whereNull('order_id') // Hanya ambil alamat default
+            ->whereNull('order_id')
             ->latest()
             ->first();
         
         $this->shippingAddress = $shipping?->address ?? $user->address;
         $this->shippingNumber = $shipping?->phone_number ?? $user->phone_number;
         $this->shippingName = $shipping?->recipient_name ?? $user->name;
+        $this->note = $shipping?->note ?? '';
     }
 
     public function placeOrder()
@@ -112,20 +113,30 @@ class CheckoutComponent extends Component
             'status' => 'pending',
         ]);
 
-        // Dapatkan alamat default user
-        $defaultAddress = ShippingAddress::where('user_id', Auth::id())
-            ->whereNull('order_id')
-            ->first();
+        // Simpan item ke OrderItem dan kurangi stok produk
+        foreach ($cartItems as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price' => $item->product->price,
+            ]);
 
-        // Buat alamat spesifik untuk order ini
-        ShippingAddress::create([
-            'order_id' => $order->id, // order_id wajib diisi
-            'user_id' => Auth::id(),
-            'recipient_name' => $defaultAddress ? $defaultAddress->recipient_name : $this->shippingName,
-            'address' => $defaultAddress ? $defaultAddress->address : $this->shippingAddress,
-            'phone_number' => $defaultAddress ? $defaultAddress->phone_number : $this->shippingNumber,
-            'note' => $this->note,
-        ]);
+            // Kurangi stok produk
+            $item->product->decrement('stock', $item->quantity);
+        }
+
+        // Hanya buat/mengupdate shipping address JIKA BELUM ADA untuk order ini
+        ShippingAddress::updateOrCreate(
+            ['order_id' => $order->id],
+            [
+                'user_id' => Auth::id(),
+                'recipient_name' => $this->shippingName,
+                'address' => $this->shippingAddress,
+                'phone_number' => $this->shippingNumber,
+                'note' => $this->note,
+            ]
+        );
 
         // Hapus item cart
         Cart::whereIn('id', $selectedCartIds)->delete();

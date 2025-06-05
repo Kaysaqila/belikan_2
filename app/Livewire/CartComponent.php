@@ -11,6 +11,7 @@ class CartComponent extends Component
     public $selectedItems = [];
     public $selectAll = false;
     public $total = 0;
+    public $cartCount = 0;
 
     public function mount()
     {
@@ -20,6 +21,7 @@ class CartComponent extends Component
     public function loadCart()
     {
         $this->cart = Cart::with('product')->get();
+        $this->cartCount = $this->cart->sum('quantity'); // Calculate total quantity of items in the cart
     }
 
     public function updatedSelectedItems()
@@ -79,6 +81,20 @@ class CartComponent extends Component
     {
         session(['selected_cart_ids' => $this->selectedItems]);
         return redirect()->route('checkout');
+    }
+
+    public function removeItem($id)
+    {
+        Cart::find($id)?->delete();
+
+        // Refresh data
+        $this->loadCart();
+
+        // Bersihkan jika item yang dihapus ada di selectedItems
+        $this->selectedItems = array_filter($this->selectedItems, fn($itemId) => $itemId != $id);
+
+        // Update total
+        $this->updateTotal();
     }
 
     public function render()

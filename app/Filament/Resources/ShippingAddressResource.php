@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShippingAddressResource\Pages;
-use App\Filament\Resources\ShippingAddressResource\RelationManagers;
 use App\Models\ShippingAddress;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ShippingAddressResource extends Resource
 {
@@ -23,11 +20,23 @@ class ShippingAddressResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('recipient_name')
+                    ->label('Recipient Name')
+                    ->required(),
+                
+                Forms\Components\TextInput::make('phone_number')
+                    ->label('Phone Number')
+                    ->required(),
+                
+                Forms\Components\TextArea::make('address')
+                    ->label('Address')
+                    ->required()
+                    ->columnSpanFull(),
+                
                 Forms\Components\TextArea::make('note')
-                ->label('Catatan')
-                ->columnSpanFull()
-                ->disabled(), 
-
+                    ->label('Note')
+                    ->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -35,13 +44,26 @@ class ShippingAddressResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('recipient_name')
+                    ->label('Recipient Name')
+                    ->sortable(),
+                
+                Tables\Columns\TextColumn::make('phone_number')
+                    ->label('Phone Number')
+                    ->sortable(),
+                
+                Tables\Columns\TextColumn::make('address')
+                    ->label('Address')
+                    ->wrap()
+                    ->limit(50),
+                
                 Tables\Columns\TextColumn::make('note')
-                ->label('Catatan')
-                ->wrap()
-                ->limit(50),
+                    ->label('Note')
+                    ->wrap()
+                    ->limit(50),
             ])
             ->filters([
-                //
+                // Add any filters if needed
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -56,7 +78,7 @@ class ShippingAddressResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // Define any relationships if needed
         ];
     }
 

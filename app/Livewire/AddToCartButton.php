@@ -14,6 +14,16 @@ class AddToCartButton extends Component
 
     public function addToCart()
     {
+        $product = Product::findOrFail($this->productId);
+
+        // Cegah kalau stok habis
+        if ($product->stock < 1) {
+            // Bisa pakai session flash atau dispatch event
+            session()->flash('error', 'Stok produk habis. Tidak bisa ditambahkan ke keranjang.');
+            return;
+        }
+
+        // Lanjut tambah ke keranjang
         $cartItem = Cart::where('user_id', Auth::id())
             ->where('product_id', $this->productId)
             ->first();
@@ -26,11 +36,9 @@ class AddToCartButton extends Component
                 'user_id' => Auth::id(),
                 'product_id' => $this->productId,
                 'quantity' => 1,
-                //'added_at' => now(),
             ]);
         }
 
-        // Emit ke parent atau komponen lain
         $this->dispatch('cartUpdated');
     }
 
